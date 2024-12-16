@@ -1,0 +1,82 @@
+body{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(23, 4, 41);
+    background-color: rgb(221, 236, 248);
+    font-size: x-large
+    
+}
+.header{
+    font-style: oblique;
+    font-size: larger;
+    color: rgb(188, 144, 230);
+}
+
+.intro {
+    font-style: italic;
+    text-align: center;
+    
+}
+
+.content{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: rgb(240, 248, 255);
+    border: 1px solid rgb(173, 216, 230);
+}
+.links {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    background-color: rgb(245, 245, 245); /* Light gray background */
+    padding: 10px; /* Space inside the box */
+    border: 2px solid rgb(100, 149, 237); /* Cornflower blue border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
+.images {
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+    background-color: rgb(255, 250, 240);
+    padding: 15px;
+    border: 1px solid rgb(255, 228, 196);
+}
+.video {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    text-align: center;
+}
+
+
+.resume-section {
+    background-color: #5a9de6; /* Blue background */
+    color: black; /* White text */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+    width: 80%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.resume-section h2 {
+    text-align: center;
+}
+
+.resume-section p, .resume-section ul {
+    font-size: smaller;
+}
+
+.resume-section ul {
+    list-style-type: none; /* Remove bullet points */
+    padding-left: 0;
+}
+
+.resume-section ul li {
+    margin: 5px 0;
+}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOWERDLE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url(floralbackground.jpg); /* Replace with your image filename */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .content-box {
+            background-color: rgba(173, 216, 230, 0.8); /* Light blue background */
+            border: 2px solid #87CEEB; /* Light blue border */
+            padding: 20px;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            text-align: center;
+            line-height: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .correct {
+            background-color: green;
+            color: white;
+        }
+
+        .present {
+            background-color: yellow;
+            color: black;
+        }
+
+        .absent {
+            background-color: gray;
+            color: white;
+        }
+
+        .input-box {
+            margin-top: 30px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1.2em;
+            width: 200px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #hint-button {
+            margin-top: 20px;
+            background-color: #000080; /* Dark blue */
+            color: white;
+            font-size: 1em;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #hint-button:hover {
+            background-color: #0000cd; /* Lighter blue */
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content-box">
+        <div class="title">FLOWERDLE</div>
+        <p>Guess the 5-letter flower-related word. You have 5 tries!</p>
+
+        <!-- Game Grid -->
+        <div class="grid" id="grid"></div>
+
+        <!-- User Input -->
+        <div class="input-box">
+            <input type="text" id="userGuess" maxlength="5" placeholder="Enter guess" />
+            <button onclick="submitGuess()">Guess</button>
+        </div>
+
+        <!-- Hint Button -->
+        <button id="hint-button" onclick="giveHint()">Hint</button>
+
+        <!-- Message -->
+        <p id="message"></p>
+    </div>
+
+    <script>
+        const flowerWords = [
+            "daisy", "lilac", "tulip", "aster", "poppy", 
+            "stalk", "petal", "bloom", "flora", "grass", 
+            "frond", "leafy", "ficus", "seeds", "aroma", 
+            "roots", "stems", "green", "field", "thorn"
+        ];
+
+        let wordToGuess = "";
+        let guessesLeft = 5;
+        let currentGuess = 0;
+        let gameOver = false;
+        let revealedLetters = []; // Tracks revealed letters for hints
+
+        function startNewGame() {
+            wordToGuess = flowerWords[Math.floor(Math.random() * flowerWords.length)];
+            guessesLeft = 5;
+            currentGuess = 0;
+            gameOver = false;
+            revealedLetters = Array(wordToGuess.length).fill(false); // Reset revealed letters
+            document.getElementById("message").textContent = `Guesses left: ${guessesLeft}`;
+            document.getElementById("userGuess").value = "";
+            setupGrid();
+        }
+
+        function setupGrid() {
+            const grid = document.getElementById("grid");
+            grid.innerHTML = "";
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 5; j++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function submitGuess() {
+            if (gameOver || guessesLeft <= 0) return;
+
+            const userGuess = document.getElementById("userGuess").value.toLowerCase();
+
+            if (userGuess.length !== 5 || !flowerWords.includes(userGuess)) {
+                alert("Please enter a valid 5-letter flower word!");
+                return;
+            }
+
+            const grid = document.getElementById("grid");
+            const guessCells = Array.from(grid.children).slice(currentGuess * 5, (currentGuess + 1) * 5);
+
+            for (let i = 0; i < 5; i++) {
+                const letter = userGuess[i];
+                const cell = guessCells[i];
+                cell.textContent = letter;
+
+                if (letter === wordToGuess[i]) {
+                    cell.classList.add("correct");
+                } else if (wordToGuess.includes(letter)) {
+                    cell.classList.add("present");
+                } else {
+                    cell.classList.add("absent");
+                }
+            }
+
+            guessesLeft--;
+            currentGuess++;
+            document.getElementById("userGuess").value = "";
+
+            if (userGuess === wordToGuess) {
+                document.getElementById("message").textContent = "Congratulations! You've guessed the word!";
+                gameOver = true;
+                setTimeout(startNewGame, 2000);
+            } else if (guessesLeft === 0) {
+                document.getElementById("message").textContent = `Game Over! The word was: ${wordToGuess}`;
+                gameOver = true;
+                setTimeout(startNewGame, 2000);
+            } else {
+                document.getElementById("message").textContent = `Guesses left: ${guessesLeft}`;
+            }
+        }
+
+        // Hint logic
+        function giveHint() {
+            if (gameOver) return;
+
+            const unrevealedIndexes = revealedLetters
+                .map((revealed, index) => (!revealed ? index : null))
+                .filter(index => index !== null);
+
+            if (unrevealedIndexes.length === 0) {
+                document.getElementById("message").textContent = "No more hints available!";
+                return;
+            }
+
+            const randomIndex = unrevealedIndexes[Math.floor(Math.random() * unrevealedIndexes.length)];
+            revealedLetters[randomIndex] = true;
+
+            document.getElementById("message").textContent = `Hint: Letter ${randomIndex + 1} is "${wordToGuess[randomIndex].toUpperCase()}"`;
+        }
+
+        startNewGame();
+    </script>
+
+</body>
+</html>
